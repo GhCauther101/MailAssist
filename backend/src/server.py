@@ -1,16 +1,6 @@
-"""
-HTTP API for MailAssist: a thin wrapper around the existing LangGraph agent.
-
-Single-session by design: one conversation lives in memory for the lifetime
-of the process (exactly like the CLI loop in main.py).
-
-Run from the project root:
-    uvicorn server:app --app-dir src --port 8000
-"""
 import json
 import threading
 from pathlib import Path
-from dotenv import load_dotenv
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -33,7 +23,6 @@ DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 class ChatRequest(BaseModel):
     message: str
 
-
 def _text(content) -> str:
     """Message content can be a str or a list of content blocks."""
     if isinstance(content, str):
@@ -43,7 +32,6 @@ def _text(content) -> str:
             b if isinstance(b, str) else b.get("text", "") for b in content
         )
     return str(content or "")
-
 
 def _tool_summary(name: str, raw: str):
     """Return (ok, one-line summary) for a tool result."""
@@ -63,7 +51,6 @@ def _tool_summary(name: str, raw: str):
     if raw.startswith(("Could not", "Invalid", "No email found")):
         return False, raw
     return True, "Done"
-
 
 def _serialize(messages) -> list:
     """Convert LangChain messages into UI items: user / assistant / tool."""
@@ -91,7 +78,6 @@ def _serialize(messages) -> list:
                 item["ok"], item["summary"] = _tool_summary(item["name"], m.content)
     return items
 
-
 @app.get("/api/status")
 def status():
     return {
@@ -101,15 +87,14 @@ def status():
         "configured": all([IMAP_HOST, IMAP_USER, IMAP_PASSWORD]),
     }
 
-
 @app.get("/api/history")
 def history():
     with _lock:
         return {"items": _serialize(_state["messages"])}
 
-
 @app.post("/api/chat")
 def chat(req: ChatRequest):
+    print("here is a chat endpoint")
     text = req.message.strip()
     if not text:
         raise HTTPException(400, "Message is empty.")
@@ -130,15 +115,12 @@ def chat(req: ChatRequest):
         # whole turn together.
         return {"items": _serialize(new)}
 
-
 @app.post("/api/reset")
 def reset():
     with _lock:
         _state["messages"] = []
     return {"ok": True}
 
-
-# ---- Serve the built React app (production / single-command mode) ----
 if DIST.exists():
     app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
 
