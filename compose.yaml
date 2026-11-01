@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  ollama1:
+    image: ollama/ollama:latest
+    container_name: ollama1
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  mail:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mail
+    environment:
+      - OLLAMA_URL=http://ollama1:11434
+    depends_on:
+      - ollama1
+    restart: unless-stopped
+    ports:
+      - "7689:7689"
+
+  mail-agent-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mail_agent_frontend
+    environment:
+      - VITE_BACKEND_URL=http://mail:7689
+    depends_on:
+      - ollama1
+      - mail
+    restart: unless-stopped
+    ports:
+      - "6578:6578"
+
+volumes:
+  ollama_data:
