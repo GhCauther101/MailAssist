@@ -12,7 +12,7 @@ import graph as node
 from llm import CHAT_MODEL
 from envar import IMAP_HOST, IMAP_USER, IMAP_PASSWORD
 
-app = FastAPI(title="MailAssist")
+app = FastAPI(title="Noi")
 
 _state = {"messages": []}
 _lock = threading.Lock()  # one conversation -> one request at a time

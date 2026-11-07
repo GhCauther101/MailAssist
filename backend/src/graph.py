@@ -19,7 +19,7 @@ llm_with_tools = llm.bind_tools(tools)
 tool_node = ToolNode(tools)
 
 SYSTEM_PROMPT = """
-You are MailAssist, an intelligent email assistant.
+You are Noi, an intelligent email assistant.
 
 Your task is to help users retrieve and summarize their emails.
 

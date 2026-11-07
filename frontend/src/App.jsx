@@ -93,9 +93,9 @@ export default function App() {
     <div className="app">
       <header className="top">
         <div className="brand">
-          <div className="logo">M</div>
+          <div className="logo">N</div>
           <div>
-            <h1>MailAssist</h1>
+            <h1>Noi</h1>
             <p className="sub">
               {offline
                 ? "Backend unreachable"
@@ -105,9 +105,6 @@ export default function App() {
             </p>
           </div>
         </div>
-        <button className="ghost" onClick={clear} disabled={busy || !items.length}>
-          New chat
-        </button>
       </header>
 
       {(offline || misconfigured) && (
@@ -152,7 +149,7 @@ export default function App() {
           ref={inputRef}
           rows={1}
           value={input}
-          placeholder="Ask MailAssist…"
+          placeholder="Ask Noi…"
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
           autoFocus

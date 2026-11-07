@@ -21,7 +21,7 @@ if __name__ == "__main__":
             )
 
         print("\n================================")
-        print("       MAILASSIST STARTED")
+        print("       Noi STARTED")
         print("================================")
         print("IMAP Host:", IMAP_HOST)
         print("IMAP User:", IMAP_USER)
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         while True:
             user_message = input("You: ").strip()
             if user_message.lower() == "quit":
-                print("\nMailAssist shutting down.")
+                print("\nNoi shutting down.")
                 break
 
             if not user_message:
@@ -48,7 +48,7 @@ if __name__ == "__main__":
             try:
                 state = node.graph.invoke(state)
                 response = state["messages"][-1]
-                print("\nMailAssist:", response.content)
+                print("\nNoi:", response.content)
             except Exception as e:
                 print("\n[ERROR]", str(e))
     except KeyboardInterrupt:
